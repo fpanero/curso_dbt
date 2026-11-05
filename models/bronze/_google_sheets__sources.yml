@@ -9,4 +9,12 @@ sources:
         columns:
           - name: _row
             data_tests:
+              - unique
               - not_null
+
+          - name: product_id
+            data_tests:
+              - relationships:
+                  arguments:
+                    to: ref('slv_sql_server_dbo__products')
+                    field: product_id
