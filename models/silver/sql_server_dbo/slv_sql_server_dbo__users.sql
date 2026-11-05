@@ -14,7 +14,8 @@ cleaned as (
           user_id
         , first_name
         , last_name
-        , email
+        , lower(trim(email))  as email
+        , regexp_like(lower(trim(email)), '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$') as is_valid_email_address
         , phone_number
         , address_id
         , created_at_utc
