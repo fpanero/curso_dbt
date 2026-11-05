@@ -142,3 +142,25 @@ models:
               config:
                 store_failures: true
 
+
+unit_tests:
+  - name: test_dim_products_categoriza_stock
+    description: Comprueba la categorización del stock según las unidades disponibles.
+    model: dim_products
+    given:
+      - input: ref('slv_sql_server_dbo__products')
+        rows:
+          - product_id: 1
+            inventory_units: 0
+          - product_id: 2
+            inventory_units: 5
+          - product_id: 3
+            inventory_units: 100
+    expect:
+      rows:
+        - product_id: 1
+          stock_status: out_of_stock
+        - product_id: 2
+          stock_status: low_stock
+        - product_id: 3
+          stock_status: in_stock
