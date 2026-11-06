@@ -18,3 +18,11 @@ sources:
                   arguments:
                     to: ref('slv_sql_server_dbo__products')
                     field: product_id
+
+      - name: slv_sql_server_dbo__order_items
+        columns:
+          - name: positive_values
+            data_tests:
+              - min_value:
+                  arguments:
+                    value: 1
