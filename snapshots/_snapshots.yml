@@ -40,3 +40,16 @@ snapshots:
     columns:
       - name: dbt_scd_id
         data_tests: [unique, not_null]
+
+
+  # --- Historia de usuarios: timestamp sobre updated_at + borrados
+  - name: users_snapshot
+    relation: source('sql_server_dbo', 'users')
+    config:
+      unique_key: user_id
+      strategy: timestamp
+      updated_at: updated_at
+      hard_deletes: new_record
+    columns:
+      - name: dbt_scd_id
+        data_tests: [unique, not_null]
