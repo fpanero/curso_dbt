@@ -9,4 +9,8 @@ sources:
         columns:
           - name: _row
             data_tests:
+              - unique
               - not_null
+
+
+
