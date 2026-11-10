@@ -28,6 +28,13 @@ docs-paths: ["docs"]
 
 clean-targets: ["target", "dbt_packages"]
 
+vars:
+  low_stock_threshold: 10
+  budget_start_date: '2024-01-01'
+
+on-run-end:
+  - "{{ log_run_summary(results) }}"
+
 # =============================================================================
 # Modelos · arquitectura Medallion Cívica
 # =============================================================================
@@ -44,8 +51,9 @@ models:
     # --- Staging: casting y renaming, 1:1 con Bronze. Vistas: no ocupan
     #     almacenamiento y siempre reflejan Bronze.
     staging:
+      +tags: ['staging']
       +materialized: view
-      +database: DEV_SILVER_DB
+      +database: "{{ env_var('DBT_SILVER_DB') }}"
       sql_server_dbo:
         +schema: sql_server_dbo
       google_sheets:
@@ -54,8 +62,9 @@ models:
     # --- Silver: limpieza y deduplicación. Tablas: la deduplicación es cara y
     #     no queremos repetirla en cada consulta.
     silver:
+      +tags: ['silver']
       +materialized: table
-      +database: DEV_SILVER_DB
+      +database: "{{ env_var('DBT_SILVER_DB') }}"
       sql_server_dbo:
         +schema: sql_server_dbo
       google_sheets:
@@ -64,20 +73,24 @@ models:
     # --- Gold: consumo. La capa la marca la database; el tipo de tabla, el
     #     prefijo del modelo (dim_, fct_, agg_, int_).
     gold:
+      +tags: ['gold']
       +materialized: table
-      +database: DEV_GOLD_DB
+      +database: "{{ env_var('DBT_GOLD_DB') }}"
       intermediate:
         +materialized: view
         +schema: intermediate
       core:
+        +tags: ['core'] # gold/core: tags gold y core
         +schema: core
         +meta:
           owner: equipo-datos-core
       marketing:
+        +tags: ['marketing'] # gold/marketing: tags gold y merketing
         +schema: marketing
         +meta:
           owner: equipo-marketing-analytics
       product:
+        +tags: ['product'] # gold/product: tags gold y product
         +schema: product
         +meta:
           owner: equipo-producto
@@ -88,7 +101,7 @@ models:
 # Van a Silver y no a Bronze: Bronze solo la escribe la herramienta de ingesta.
 seeds:
   curso_data_engineering:
-    +database: DEV_SILVER_DB
+    +database: "{{ env_var('DBT_SILVER_DB') }}"
     +schema: seeds
     country_codes:
       # Tipos explícitos para que dbt no los infiera del CSV
@@ -104,6 +117,6 @@ seeds:
 # la historia y no se puede reconstruir desde Bronze.
 snapshots:
   curso_data_engineering:
-    +database: DEV_SILVER_DB
+    +database: "{{ env_var('DBT_SILVER_DB') }}"
     +schema: snapshots
     +transient: false
