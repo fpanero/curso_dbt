@@ -25,6 +25,7 @@ final as (
         , net_order_cost_usd
         , order_status
         , date_load
+        , "CI TEST" as test_ci
     from orders
 )
 
