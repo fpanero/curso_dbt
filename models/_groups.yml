@@ -1,0 +1,15 @@
+groups:
+  - name: core
+    owner:
+      name: Equipo de Datos (core)
+      email: datos-core@ejemplo.com
+
+  - name: marketing
+    owner:
+      name: Equipo de Marketing Analytics
+      email: marketing-analytics@ejemplo.com
+
+  - name: product
+    owner:
+      name: Equipo de Producto
+      email: producto@ejemplo.com
