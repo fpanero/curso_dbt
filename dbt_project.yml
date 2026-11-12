@@ -80,16 +80,22 @@ models:
         +materialized: view
         +schema: intermediate
       core:
+        +grants:
+          select: ['REPORTING_ROLE']
         +tags: ['core'] # gold/core: tags gold y core
         +schema: core
         +meta:
           owner: equipo-datos-core
       marketing:
+        +grants:
+          select: ['REPORTING_ROLE']
         +tags: ['marketing'] # gold/marketing: tags gold y merketing
         +schema: marketing
         +meta:
           owner: equipo-marketing-analytics
       product:
+        +grants:
+          select: ['REPORTING_ROLE']
         +tags: ['product'] # gold/product: tags gold y product
         +schema: product
         +meta:
