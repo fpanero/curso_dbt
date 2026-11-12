@@ -24,6 +24,7 @@ final as (
         , discount_usd
         , net_order_cost_usd
         , order_status
+        , delivered_at_utc is not null              as is_delivered
         , date_load
     from orders
 )
